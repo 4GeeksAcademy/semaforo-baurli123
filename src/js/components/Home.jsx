@@ -1,27 +1,67 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-//include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
-
-//create your first component
 const Home = () => {
-	return (
-		<div className="text-center">
-            
+	const [color, setColor] = useState("red");
+	const [auto, setAuto] = useState(false);
+	const [showPurple, setShowPurple] = useState(false);
 
-			<h1 className="text-center mt-5">Hello Rigo!</h1>
-			<p>
-				<img src={rigoImage} />
-			</p>
-			<a href="#" className="btn btn-success">
-				If you see this green button... bootstrap is working...
-			</a>
-			<p>
-				Made by{" "}
-				<a href="http://www.4geeksacademy.com">4Geeks Academy</a>, with
-				love!
-			</p>
+	useEffect(() => {
+		if (!auto) return;
+
+		const colors = showPurple
+			? ["red", "yellow", "green", "purple"]
+			: ["red", "yellow", "green"];
+		let index = colors.indexOf(color);
+
+		const interval = setInterval(() => {
+			index = (index + 1) % colors.length;
+			setColor(colors[index]);
+		}, 1000);
+
+		return () => clearInterval(interval);
+	}, [auto, color]);
+
+	const handleClick = (newColor) => {
+		if (!auto) setColor(newColor);
+	};
+
+	return (
+		<div className="container text-center mt-5">
+		 <div className="traffic-light">
+		
+			<div
+				className={`light red ${color === "red" ? "active" : ""}`}
+				onClick={() => handleClick("red")}
+			></div>
+			<div
+				className={`light yellow ${color === "yellow" ? "active" : ""}`}
+				onClick={() => handleClick("yellow")}
+			></div>
+			<div
+				className={`light green ${color === "green" ? "active" : ""}`}
+				onClick={() => handleClick("green")}
+			></div>
+			{showPurple && (
+			<div
+				className={`light purple ${color === "purple" ? "active" : ""}`}
+				onClick={() => handleClick("purple")}
+			></div>
+			)}
 		</div>
+		<button
+			className="btn btn-primary mt-3"
+			onClick={() => setAuto(!auto)}
+		>
+			{auto ? "Stop" : "Auto"}
+		</button>
+
+		 <button
+		 className="btn btn-secondary mt-3"
+		 onClick={() => setShowPurple(true)}
+		 >
+			?
+		 </button>		
+		 </div>
 	);
 };
 
